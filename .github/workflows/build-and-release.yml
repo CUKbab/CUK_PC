@@ -1,0 +1,112 @@
+name: Build and Release CUK PC
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-package:
+    name: Build & Package (${{ matrix.target.os }} - ${{ matrix.target.rid }})
+    runs-on: ${{ matrix.target.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - os: Linux
+            rid: linux-x64
+            runner: ubuntu-latest
+            artifact: CUK-linux-x64.tar.gz
+          - os: Windows
+            rid: win-x64
+            runner: windows-latest
+            artifact: CUK-windows-x64.zip
+          - os: macOS-Intel
+            rid: osx-x64
+            runner: macos-13
+            artifact: CUK-macos-x64.dmg
+          - os: macOS-AppleSilicon
+            rid: osx-arm64
+            runner: macos-latest
+            artifact: CUK-macos-arm64.dmg
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      # Linux Build & Package (.tar.gz / AppImage)
+      - name: Build Linux
+        if: matrix.target.os == 'Linux'
+        run: |
+          dotnet publish CUK/CUK.csproj -c Release -r linux-x64 --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./publish/linux
+          cp CUK.desktop ./publish/linux/
+          cp CUK/Assets/cuk_logo.png ./publish/linux/
+          tar -czvf ${{ matrix.target.artifact }} -C ./publish/linux .
+
+      # Windows Build & Package (.zip / Setup)
+      - name: Build Windows
+        if: matrix.target.os == 'Windows'
+        shell: pwsh
+        run: |
+          dotnet publish CUK/CUK.csproj -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./publish/win
+          Compress-Archive -Path ./publish/win/* -DestinationPath ${{ matrix.target.artifact }}
+
+      # macOS Build & Package (.app & .dmg)
+      - name: Build macOS
+        if: startsWith(matrix.target.os, 'macOS')
+        run: |
+          dotnet publish CUK/CUK.csproj -c Release -r ${{ matrix.target.rid }} --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./publish/bin
+          
+          mkdir -p ./publish/CUK.app/Contents/MacOS
+          mkdir -p ./publish/CUK.app/Contents/Resources
+          mv ./publish/bin/CUK ./publish/CUK.app/Contents/MacOS/CUK
+          chmod +x ./publish/CUK.app/Contents/MacOS/CUK
+          
+          cat <<EOF > ./publish/CUK.app/Contents/Info.plist
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundleName</key>
+              <string>CUK밥</string>
+              <key>CFBundleDisplayName</key>
+              <string>CUK밥</string>
+              <key>CFBundleIdentifier</key>
+              <string>com.cukbab.cukpc</string>
+              <key>CFBundleVersion</key>
+              <string>1.0.0</string>
+              <key>CFBundleShortVersionString</key>
+              <string>1.0.0</string>
+              <key>CFBundlePackageType</key>
+              <string>APPL</string>
+              <key>CFBundleExecutable</key>
+              <string>CUK</string>
+              <key>NSHighResolutionCapable</key>
+              <true/>
+          </dict>
+          </plist>
+          EOF
+          
+          # Create DMG
+          hdiutil create -volname "CUK밥" -srcfolder ./publish/CUK.app -ov -format UDZO ${{ matrix.target.artifact }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target.artifact }}
+          path: ${{ matrix.target.artifact }}
+
+      - name: Upload to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ matrix.target.artifact }}

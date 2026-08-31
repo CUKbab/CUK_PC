@@ -1,0 +1,29 @@
+# Build and compilation outputs
+**/[Bb]in/
+**/[Oo]bj/
+**/[Aa]rtifacts/
+dist/
+publish/
+
+# Visual Studio / VS Code / JetBrains Rider
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vscode/
+
+# User-specific & local cache files
+*.log
+*.tmp
+*.cache
+
+# OS-generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

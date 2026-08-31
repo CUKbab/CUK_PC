@@ -1,0 +1,336 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CUK.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="950" d:DesignHeight="700"
+        x:Class="CUK.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Icon="/Assets/cuk_logo.png"
+        Title="CUK밥"
+        MinWidth="750" MinHeight="520"
+        Width="950" Height="700"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid>
+        <!-- Main Application Layout -->
+        <Grid ColumnDefinitions="260,*">
+            
+            <!-- Left Sidebar -->
+            <Border Grid.Column="0"
+                    Background="{DynamicResource SidebarBackgroundBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="0,0,1,0">
+                <Grid RowDefinitions="Auto,*,Auto,Auto">
+                    
+                    <!-- App Brand Header -->
+                    <Border Grid.Row="0" Padding="20,24,20,16">
+                        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Image Source="/Assets/cuk_logo.png" Width="36" Height="36" />
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Loc[app_name]}"
+                                           FontSize="19"
+                                           FontWeight="Bold"
+                                           Foreground="{DynamicResource HeaderPrimaryBrush}" />
+                                <TextBlock Text="Catholic Univ. of Korea"
+                                           FontSize="11"
+                                           Foreground="{DynamicResource SubTextBrush}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Navigation Menu Items -->
+                    <StackPanel Grid.Row="1" Margin="14,8,14,8" Spacing="4">
+                        <!-- Buon Pranzo -->
+                        <RadioButton Classes="navBtn"
+                                     IsChecked="{Binding SelectedScreenIndex, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=0}"
+                                     Command="{Binding SelectScreenCommand}"
+                                     CommandParameter="0">
+                            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                                <materialIcons:MaterialIcon Kind="FoodForkDrink" Width="20" Height="20" Foreground="{DynamicResource SystemAccentColor}" />
+                                <TextBlock Text="{Binding Loc[screen_buon_pranzo]}" FontSize="14" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </RadioButton>
+
+                        <!-- Cafe Bona -->
+                        <RadioButton Classes="navBtn"
+                                     IsChecked="{Binding SelectedScreenIndex, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=1}"
+                                     Command="{Binding SelectScreenCommand}"
+                                     CommandParameter="1">
+                            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                                <materialIcons:MaterialIcon Kind="CoffeeOutline" Width="20" Height="20" Foreground="{DynamicResource SystemAccentColor}" />
+                                <TextBlock Text="{Binding Loc[screen_cafe_bona]}" FontSize="14" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </RadioButton>
+
+                        <!-- Settings -->
+                        <RadioButton Classes="navBtn"
+                                     IsChecked="{Binding SelectedScreenIndex, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=2}"
+                                     Command="{Binding SelectScreenCommand}"
+                                     CommandParameter="2">
+                            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                                <materialIcons:MaterialIcon Kind="CogOutline" Width="20" Height="20" Foreground="{DynamicResource SystemAccentColor}" />
+                                <TextBlock Text="{Binding Loc[screen_settings]}" FontSize="14" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </RadioButton>
+                    </StackPanel>
+
+                    <!-- Date Selector Widget (Visible on menu screens) -->
+                    <Border Grid.Row="2"
+                            Margin="14,10"
+                            Padding="12,14"
+                            CornerRadius="12"
+                            Background="{DynamicResource CardBackgroundBrush}"
+                            BorderBrush="{DynamicResource CardBorderBrush}"
+                            BorderThickness="1"
+                            IsVisible="{Binding SelectedScreenIndex, Converter={x:Static ObjectConverters.NotEqual}, ConverterParameter=2}">
+                        <StackPanel Spacing="10">
+                            <!-- Date controls -->
+                            <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+                                <Button Grid.Column="0"
+                                        Command="{Binding PreviousDayCommand}"
+                                        IsEnabled="{Binding CanGoPreviousDay}"
+                                        Padding="6" CornerRadius="8">
+                                    <materialIcons:MaterialIcon Kind="ChevronLeft" Width="18" Height="18" />
+                                </Button>
+
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding FormattedDate}"
+                                           FontSize="13"
+                                           FontWeight="SemiBold"
+                                           TextAlignment="Center"
+                                           VerticalAlignment="Center" />
+
+                                <Button Grid.Column="2"
+                                        Command="{Binding NextDayCommand}"
+                                        IsEnabled="{Binding CanGoNextDay}"
+                                        Padding="6" CornerRadius="8">
+                                    <materialIcons:MaterialIcon Kind="ChevronRight" Width="18" Height="18" />
+                                </Button>
+                            </Grid>
+
+                            <!-- Today Button -->
+                            <Button Command="{Binding TodayCommand}"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    CornerRadius="8"
+                                    Padding="8,5">
+                                <TextBlock Text="{Binding Loc[today]}" FontSize="12" />
+                            </Button>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Bottom Bar (Refresh button) -->
+                    <Border Grid.Row="3" Padding="14,12,14,16">
+                        <Button Command="{Binding RefreshMenuCommand}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                CornerRadius="10"
+                                Padding="10,8">
+                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                <materialIcons:MaterialIcon Kind="Refresh" Width="18" Height="18" />
+                                <TextBlock Text="{Binding Loc[refresh]}" FontSize="13" FontWeight="Medium" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </Border>
+
+                </Grid>
+            </Border>
+
+            <!-- Right Content Area -->
+            <Grid Grid.Column="1" RowDefinitions="Auto,*">
+                
+                <!-- Screen Header Banner -->
+                <Border Grid.Row="0"
+                        Padding="28,20,28,14"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="0,0,0,1">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="{Binding FormattedDate}"
+                                       FontSize="13"
+                                       Foreground="{DynamicResource SubTextBrush}"
+                                       IsVisible="{Binding SelectedScreenIndex, Converter={x:Static ObjectConverters.NotEqual}, ConverterParameter=2}" />
+                            
+                            <TextBlock Text="{Binding Loc[screen_buon_pranzo]}"
+                                       FontSize="22" FontWeight="Bold"
+                                       Foreground="{DynamicResource HeaderPrimaryBrush}"
+                                       IsVisible="{Binding SelectedScreenIndex, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=0}" />
+
+                            <TextBlock Text="{Binding Loc[screen_cafe_bona]}"
+                                       FontSize="22" FontWeight="Bold"
+                                       Foreground="{DynamicResource HeaderPrimaryBrush}"
+                                       IsVisible="{Binding SelectedScreenIndex, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=1}" />
+
+                            <TextBlock Text="{Binding Loc[screen_settings]}"
+                                       FontSize="22" FontWeight="Bold"
+                                       Foreground="{DynamicResource HeaderPrimaryBrush}"
+                                       IsVisible="{Binding SelectedScreenIndex, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=2}" />
+                        </StackPanel>
+
+                        <!-- Refresh Indicator / Spinner -->
+                        <ProgressBar Grid.Column="1"
+                                     IsIndeterminate="True"
+                                     IsVisible="{Binding IsRefreshing}"
+                                     Width="80" Height="4"
+                                     VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+
+                <!-- Content Area Body -->
+                <Grid Grid.Row="1">
+                    
+                    <!-- Loading State -->
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Spacing="14"
+                                IsVisible="{Binding IsLoading}">
+                        <ProgressBar IsIndeterminate="True" Width="140" Height="4" />
+                        <TextBlock Text="{Binding Loc[loading_menu]}"
+                                   FontSize="14"
+                                   Foreground="{DynamicResource SubTextBrush}"
+                                   HorizontalAlignment="Center" />
+                    </StackPanel>
+
+                    <!-- Error State Notification -->
+                    <Border Margin="24,16,24,0"
+                            VerticalAlignment="Top"
+                            Background="#FEE2E2"
+                            BorderBrush="#F87171"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="12,10"
+                            IsVisible="{Binding HasError}">
+                        <TextBlock Text="{Binding ErrorMessage}"
+                                   Foreground="#B91C1C"
+                                   FontSize="13"
+                                   TextWrapping="Wrap" />
+                    </Border>
+
+                    <!-- View Container -->
+                    <ContentControl Content="{Binding CurrentView}"
+                                    IsVisible="{Binding !IsLoading}"
+                                    FontSize="{Binding BaseFontSize}" />
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <!-- Changelog Modal Dialog -->
+        <Border Background="#80000000"
+                IsVisible="{Binding SettingsVm.IsChangelogOpen}"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+            <Border Background="{DynamicResource CardBackgroundBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="16"
+                    Padding="24"
+                    MaxWidth="560" MaxHeight="520"
+                    Margin="32"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <Grid RowDefinitions="Auto,*,Auto">
+                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,16">
+                        <TextBlock Text="{Binding Loc[whats_new]}"
+                                   FontSize="18" FontWeight="Bold"
+                                   Foreground="{DynamicResource HeaderPrimaryBrush}" />
+                        <Button Grid.Column="1"
+                                Command="{Binding SettingsVm.CloseChangelogCommand}"
+                                Padding="6" CornerRadius="8">
+                            <materialIcons:MaterialIcon Kind="Close" Width="18" Height="18" />
+                        </Button>
+                    </Grid>
+
+                    <ScrollViewer Grid.Row="1" Margin="0,0,0,16">
+                        <StackPanel Spacing="10">
+                            <ProgressBar IsIndeterminate="True"
+                                         IsVisible="{Binding SettingsVm.IsChangelogLoading}"
+                                         Height="4" Margin="0,20" />
+                            <TextBlock Text="{Binding SettingsVm.ChangelogContent}"
+                                       FontSize="13" LineHeight="20"
+                                       TextWrapping="Wrap"
+                                       IsVisible="{Binding !SettingsVm.IsChangelogLoading}" />
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <Button Grid.Row="2"
+                            Command="{Binding SettingsVm.CloseChangelogCommand}"
+                            HorizontalAlignment="Right"
+                            Padding="16,8"
+                            CornerRadius="8">
+                        <TextBlock Text="{Binding Loc[close]}" />
+                    </Button>
+                </Grid>
+            </Border>
+        </Border>
+
+        <!-- Feedback & Report Modal Dialog -->
+        <Border Background="#80000000"
+                IsVisible="{Binding SettingsVm.IsReportDialogOpen}"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+            <Border Background="{DynamicResource CardBackgroundBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="16"
+                    Padding="24"
+                    MaxWidth="520"
+                    Margin="32"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+                    <!-- Title Header -->
+                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,16">
+                        <TextBlock Text="{Binding SettingsVm.ReportDialogTitle}"
+                                   FontSize="18" FontWeight="Bold"
+                                   Foreground="{DynamicResource HeaderPrimaryBrush}" />
+                        <Button Grid.Column="1"
+                                Command="{Binding SettingsVm.CloseReportDialogCommand}"
+                                Padding="6" CornerRadius="8">
+                            <materialIcons:MaterialIcon Kind="Close" Width="18" Height="18" />
+                        </Button>
+                    </Grid>
+
+                    <!-- Title input -->
+                    <StackPanel Grid.Row="1" Margin="0,0,0,12" Spacing="4">
+                        <TextBlock Text="{Binding Loc[issue_title]}" FontSize="12" FontWeight="SemiBold" />
+                        <TextBox Text="{Binding SettingsVm.ReportTitleInput, Mode=TwoWay}" CornerRadius="8" />
+                    </StackPanel>
+
+                    <!-- Description input -->
+                    <StackPanel Grid.Row="2" Margin="0,0,0,16" Spacing="4">
+                        <TextBlock Text="{Binding Loc[issue_description]}" FontSize="12" FontWeight="SemiBold" />
+                        <TextBox Text="{Binding SettingsVm.ReportBodyInput, Mode=TwoWay}"
+                                 AcceptsReturn="True"
+                                 Height="100"
+                                 TextWrapping="Wrap"
+                                 CornerRadius="8" />
+                    </StackPanel>
+
+                    <!-- Status message -->
+                    <TextBlock Grid.Row="3"
+                               Text="{Binding SettingsVm.ReportStatusMessage}"
+                               FontSize="12"
+                               Foreground="{DynamicResource SystemAccentColor}"
+                               Margin="0,0,0,12"
+                               IsVisible="{Binding SettingsVm.ReportStatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+                    <!-- Action Buttons -->
+                    <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                        <Button Command="{Binding SettingsVm.CloseReportDialogCommand}"
+                                Padding="14,7" CornerRadius="8">
+                            <TextBlock Text="{Binding Loc[cancel]}" />
+                        </Button>
+                        <Button Command="{Binding SettingsVm.SubmitReportCommand}"
+                                IsEnabled="{Binding !SettingsVm.IsSubmittingReport}"
+                                Padding="16,7" CornerRadius="8">
+                            <TextBlock Text="{Binding Loc[submit]}" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Border>
+
+    </Grid>
+</Window>

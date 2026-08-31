@@ -1,0 +1,216 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:CUK.ViewModels"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="750"
+             x:Class="CUK.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="28,20,28,32" Spacing="24" MaxWidth="700" HorizontalAlignment="Left">
+            
+            <!-- Section: Display Settings -->
+            <StackPanel Spacing="14">
+                <TextBlock Text="{Binding Loc[display_settings]}"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource HeaderPrimaryBrush}" />
+
+                <!-- Theme Selection -->
+                <Border Classes="menuCard">
+                    <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="{Binding Loc[theme_selection]}" FontWeight="SemiBold" />
+                        </StackPanel>
+                        <ComboBox Grid.Column="1"
+                                  SelectedIndex="{Binding SelectedThemeIndex}"
+                                  Width="180">
+                            <ComboBoxItem Content="{Binding Loc[theme_system]}" />
+                            <ComboBoxItem Content="{Binding Loc[theme_light]}" />
+                            <ComboBoxItem Content="{Binding Loc[theme_dark]}" />
+                        </ComboBox>
+                    </Grid>
+                </Border>
+
+                <!-- Font Size -->
+                <Border Classes="menuCard">
+                    <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="{Binding Loc[font_size_selection]}" FontWeight="SemiBold" />
+                        </StackPanel>
+                        <ComboBox Grid.Column="1"
+                                  SelectedIndex="{Binding SelectedFontSizeIndex}"
+                                  Width="180">
+                            <ComboBoxItem Content="{Binding Loc[font_size_small]}" />
+                            <ComboBoxItem Content="{Binding Loc[font_size_medium]}" />
+                            <ComboBoxItem Content="{Binding Loc[font_size_large]}" />
+                        </ComboBox>
+                    </Grid>
+                </Border>
+
+                <!-- Language Selection -->
+                <Border Classes="menuCard">
+                    <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="{Binding Loc[language_selection]}" FontWeight="SemiBold" />
+                        </StackPanel>
+                        <ComboBox Grid.Column="1"
+                                  SelectedIndex="{Binding SelectedLanguageIndex}"
+                                  Width="180">
+                            <ComboBoxItem Content="{Binding Loc[lang_system]}" />
+                            <ComboBoxItem Content="{Binding Loc[lang_ko]}" />
+                            <ComboBoxItem Content="{Binding Loc[lang_en]}" />
+                            <ComboBoxItem Content="{Binding Loc[lang_ja]}" />
+                            <ComboBoxItem Content="{Binding Loc[lang_zh]}" />
+                        </ComboBox>
+                    </Grid>
+                </Border>
+
+                <!-- Operating Hours Toggle -->
+                <Border Classes="menuCard">
+                    <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="{Binding Loc[show_operating_hours]}" FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding Loc[show_operating_hours_desc]}"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource SubTextBrush}" />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1"
+                                      IsChecked="{Binding ShowOperatingHours}"
+                                      OnContent=""
+                                      OffContent="" />
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+            <!-- Section: Updates & Info -->
+            <StackPanel Spacing="14">
+                <TextBlock Text="{Binding Loc[whats_new]}"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource HeaderPrimaryBrush}" />
+
+                <Border Classes="menuCard">
+                    <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="{Binding Loc[whats_new]}" FontWeight="SemiBold" />
+                            <TextBlock Text="View release notes and recent changes."
+                                       FontSize="12"
+                                       Foreground="{DynamicResource SubTextBrush}" />
+                        </StackPanel>
+                        <Button Grid.Column="1"
+                                Command="{Binding OpenChangelogCommand}"
+                                Classes="accent">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <materialIcons:MaterialIcon Kind="NewReleases" Width="18" Height="18" />
+                                <TextBlock Text="{Binding Loc[whats_new]}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+            <!-- Section: Feedback & Support -->
+            <StackPanel Spacing="14">
+                <TextBlock Text="{Binding Loc[feedback_support]}"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource HeaderPrimaryBrush}" />
+
+                <!-- Report Menu Error -->
+                <Border Classes="menuCard">
+                    <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="{Binding Loc[report_menu_error]}" FontWeight="SemiBold" />
+                            <TextBlock Text="Report an inaccurate or missing cafeteria menu."
+                                       FontSize="12"
+                                       Foreground="{DynamicResource SubTextBrush}" />
+                        </StackPanel>
+                        <Button Grid.Column="1"
+                                Command="{Binding OpenReportDialogCommand}"
+                                CommandParameter="menu-error">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <materialIcons:MaterialIcon Kind="SilverwareForkKnife" Width="16" Height="16" />
+                                <TextBlock Text="{Binding Loc[report_menu_error]}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <!-- Suggest Feature -->
+                <Border Classes="menuCard">
+                    <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="{Binding Loc[suggest_feature]}" FontWeight="SemiBold" />
+                            <TextBlock Text="Propose new features or improvements."
+                                       FontSize="12"
+                                       Foreground="{DynamicResource SubTextBrush}" />
+                        </StackPanel>
+                        <Button Grid.Column="1"
+                                Command="{Binding OpenReportDialogCommand}"
+                                CommandParameter="feature">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <materialIcons:MaterialIcon Kind="LightbulbOutline" Width="16" Height="16" />
+                                <TextBlock Text="{Binding Loc[suggest_feature]}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <!-- Report Bug -->
+                <Border Classes="menuCard">
+                    <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="{Binding Loc[report_bug]}" FontWeight="SemiBold" />
+                            <TextBlock Text="Report an application bug or unexpected behavior."
+                                       FontSize="12"
+                                       Foreground="{DynamicResource SubTextBrush}" />
+                        </StackPanel>
+                        <Button Grid.Column="1"
+                                Command="{Binding OpenReportDialogCommand}"
+                                CommandParameter="bug">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <materialIcons:MaterialIcon Kind="BugOutline" Width="16" Height="16" />
+                                <TextBlock Text="{Binding Loc[report_bug]}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+            <!-- Section: About -->
+            <StackPanel Spacing="14">
+                <TextBlock Text="{Binding Loc[about]}"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource HeaderPrimaryBrush}" />
+
+                <Border Classes="menuCard">
+                    <StackPanel Spacing="12">
+                        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Image Source="/Assets/cuk_logo.png" Width="40" Height="40" />
+                            <StackPanel Spacing="2">
+                                <TextBlock Text="CUK밥 PC" FontSize="16" FontWeight="Bold" />
+                                <TextBlock Text="Version 1.0.0" FontSize="12" Foreground="{DynamicResource SubTextBrush}" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <TextBlock Text="{Binding Loc[about_desc]}"
+                                   FontSize="13"
+                                   Foreground="{DynamicResource SubTextBrush}" />
+
+                        <Button Command="{Binding OpenGitHubCommand}" HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <materialIcons:MaterialIcon Kind="Github" Width="18" Height="18" />
+                                <TextBlock Text="{Binding Loc[github_source]}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,60 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:CUK.ViewModels"
+             xmlns:models="using:CUK.Models"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="650"
+             x:Class="CUK.Views.BuonPranzoView"
+             x:DataType="vm:BuonPranzoViewModel">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="24,16,24,24" Spacing="20">
+            <ItemsControl ItemsSource="{Binding MealGroups}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="models:MealGroupItem">
+                        <StackPanel Margin="0,0,0,24" Spacing="10">
+                            <!-- Group Header -->
+                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding GroupTitle}"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           Foreground="{DynamicResource HeaderPrimaryBrush}" />
+                                <TextBlock Text="{Binding OperatingHours}"
+                                           FontSize="13"
+                                           FontWeight="Normal"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource SubTextBrush}" />
+                            </StackPanel>
+
+                            <!-- Menu Cards -->
+                            <ItemsControl ItemsSource="{Binding Items}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="models:MenuCardItem">
+                                        <Border Classes="menuCard">
+                                            <StackPanel Spacing="8">
+                                                <!-- Category Title -->
+                                                <TextBlock Text="{Binding CategoryDisplayName}"
+                                                           FontSize="15"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource SystemAccentColor}" />
+
+                                                <!-- Menu Content -->
+                                                <TextBlock Text="{Binding MenuText}"
+                                                           FontSize="14"
+                                                           TextWrapping="Wrap"
+                                                           LineHeight="22"
+                                                           Foreground="{DynamicResource TextControlForeground}" />
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
