@@ -27,7 +27,7 @@ jobs:
             artifact: CUK-windows-x64.zip
           - os: macOS-Intel
             rid: osx-x64
-            runner: macos-13
+            runner: macos-latest
             artifact: CUK-macos-x64.dmg
           - os: macOS-AppleSilicon
             rid: osx-arm64
@@ -43,16 +43,16 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      # Linux Build & Package (.tar.gz / AppImage)
+      # Linux Build & Package (.tar.gz)
       - name: Build Linux
         if: matrix.target.os == 'Linux'
         run: |
           dotnet publish CUK.csproj -c Release -r linux-x64 --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./publish/linux
-          cp CUK.desktop ./publish/linux/
-          cp CUK/Assets/cuk_logo.png ./publish/linux/
+          cp CUK.desktop ./publish/linux/ 2>/dev/null || true
+          cp Assets/cuk_logo.png ./publish/linux/ 2>/dev/null || true
           tar -czvf ${{ matrix.target.artifact }} -C ./publish/linux .
 
-      # Windows Build & Package (.zip / Setup)
+      # Windows Build & Package (.zip)
       - name: Build Windows
         if: matrix.target.os == 'Windows'
         shell: pwsh
