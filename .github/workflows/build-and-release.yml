@@ -47,7 +47,7 @@ jobs:
       - name: Build Linux
         if: matrix.target.os == 'Linux'
         run: |
-          dotnet publish CUK/CUK.csproj -c Release -r linux-x64 --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./publish/linux
+          dotnet publish CUK.csproj -c Release -r linux-x64 --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./publish/linux
           cp CUK.desktop ./publish/linux/
           cp CUK/Assets/cuk_logo.png ./publish/linux/
           tar -czvf ${{ matrix.target.artifact }} -C ./publish/linux .
@@ -57,14 +57,14 @@ jobs:
         if: matrix.target.os == 'Windows'
         shell: pwsh
         run: |
-          dotnet publish CUK/CUK.csproj -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./publish/win
+          dotnet publish CUK.csproj -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./publish/win
           Compress-Archive -Path ./publish/win/* -DestinationPath ${{ matrix.target.artifact }}
 
       # macOS Build & Package (.app & .dmg)
       - name: Build macOS
         if: startsWith(matrix.target.os, 'macOS')
         run: |
-          dotnet publish CUK/CUK.csproj -c Release -r ${{ matrix.target.rid }} --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./publish/bin
+          dotnet publish CUK.csproj -c Release -r ${{ matrix.target.rid }} --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./publish/bin
           
           mkdir -p ./publish/CUK.app/Contents/MacOS
           mkdir -p ./publish/CUK.app/Contents/Resources
