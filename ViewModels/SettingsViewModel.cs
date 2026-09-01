@@ -40,25 +40,22 @@ public partial class SettingsViewModel : ViewModelBase
     private bool _isChangelogLoading;
 
     [ObservableProperty]
-    private bool _isReportDialogOpen;
+    private bool _isReporting;
 
     [ObservableProperty]
-    private string _reportType = "menu-error";
+    private bool _isReportStatusOpen;
 
     [ObservableProperty]
-    private string _reportDialogTitle = string.Empty;
+    private bool _reportStatusSuccess;
 
     [ObservableProperty]
-    private string _reportTitleInput = string.Empty;
-
-    [ObservableProperty]
-    private string _reportBodyInput = string.Empty;
+    private string _reportStatusTitle = string.Empty;
 
     [ObservableProperty]
     private string _reportStatusMessage = string.Empty;
 
     [ObservableProperty]
-    private bool _isSubmittingReport;
+    private string? _reportStatusGithubUrl;
 
     public event Action? SettingsChanged;
 
@@ -131,61 +128,37 @@ public partial class SettingsViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public void OpenReportDialog(string type)
+    public async Task ReportMenuError()
     {
-        ReportType = type;
-        ReportTitleInput = string.Empty;
-        ReportBodyInput = string.Empty;
-        ReportStatusMessage = string.Empty;
-        IsSubmittingReport = false;
+        if (IsReporting) return;
 
-        ReportDialogTitle = type switch
-        {
-            "menu-error" => _loc.Get("report_menu_error"),
-            "feature" => _loc.Get("suggest_feature"),
-            _ => _loc.Get("report_bug")
-        };
+        IsReporting = true;
+        var (success, msg, githubUrl) = await _reporterService.ReportMenuErrorAsync();
+        IsReporting = false;
 
-        if (type == "menu-error")
-        {
-            ReportTitleInput = "Menu Error";
-            ReportBodyInput = "Menu Error reported from desktop app.";
-        }
-
-        IsReportDialogOpen = true;
-    }
-
-    [RelayCommand]
-    public void CloseReportDialog()
-    {
-        IsReportDialogOpen = false;
-    }
-
-    [RelayCommand]
-    public async Task SubmitReport()
-    {
-        if (string.IsNullOrWhiteSpace(ReportTitleInput) || string.IsNullOrWhiteSpace(ReportBodyInput))
-            return;
-
-        IsSubmittingReport = true;
-        ReportStatusMessage = _loc.Get("submitting");
-
-        var request = new IssueRequest
-        {
-            Title = ReportTitleInput.Trim(),
-            Body = ReportBodyInput.Trim(),
-            Labels = new System.Collections.Generic.List<string> { "reported-via-pc-app", ReportType },
-            UserEmail = "pc-client@cukbab.local"
-        };
-
-        var (success, msg) = await _reporterService.SubmitReportAsync(request);
-        IsSubmittingReport = false;
+        ReportStatusSuccess = success;
+        ReportStatusTitle = success ? _loc.Get("report_success") : _loc.Get("report_error");
         ReportStatusMessage = msg;
+        ReportStatusGithubUrl = githubUrl;
+        IsReportStatusOpen = true;
+    }
 
-        if (success)
+    [RelayCommand]
+    public void CloseReportStatus()
+    {
+        IsReportStatusOpen = false;
+    }
+
+    [RelayCommand]
+    public void OpenReportGithub()
+    {
+        if (!string.IsNullOrWhiteSpace(ReportStatusGithubUrl))
         {
-            await Task.Delay(1500);
-            IsReportDialogOpen = false;
+            OpenUrl(ReportStatusGithubUrl);
+        }
+        else
+        {
+            OpenUrl("https://github.com/CUKbab");
         }
     }
 

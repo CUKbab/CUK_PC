@@ -32,7 +32,7 @@ public partial class BuonPranzoViewModel : ViewModelBase
             MealGroups.Add(new MealGroupItem
             {
                 GroupTitle = _loc.Get("group_morning"),
-                OperatingHours = showOperatingHours ? $"({_loc.Get("operating_morning")})" : string.Empty,
+                OperatingHours = showOperatingHours ? _loc.Get("operating_morning") : string.Empty,
                 Items = morningItems
             });
         }
@@ -48,7 +48,7 @@ public partial class BuonPranzoViewModel : ViewModelBase
             MealGroups.Add(new MealGroupItem
             {
                 GroupTitle = _loc.Get("group_lunch"),
-                OperatingHours = showOperatingHours ? $"({_loc.Get("operating_lunch")})" : string.Empty,
+                OperatingHours = showOperatingHours ? _loc.Get("operating_lunch") : string.Empty,
                 Items = lunchItems
             });
         }
@@ -62,7 +62,7 @@ public partial class BuonPranzoViewModel : ViewModelBase
             MealGroups.Add(new MealGroupItem
             {
                 GroupTitle = _loc.Get("group_dinner"),
-                OperatingHours = showOperatingHours ? $"({_loc.Get("operating_dinner")})" : string.Empty,
+                OperatingHours = showOperatingHours ? _loc.Get("operating_dinner") : string.Empty,
                 Items = dinnerItems
             });
         }

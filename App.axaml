@@ -13,23 +13,23 @@
         <FluentTheme />
         <materialIcons:MaterialIconStyles />
 
-        <!-- Card Container Style -->
+        <!-- LG UX 10 Floating Card Style -->
         <Style Selector="Border.menuCard">
-            <Setter Property="CornerRadius" Value="12" />
-            <Setter Property="Padding" Value="16" />
+            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="Padding" Value="18,16" />
             <Setter Property="Margin" Value="0,0,0,12" />
             <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
 
-        <!-- Sidebar Navigation Button Style -->
+        <!-- LG UX 10 Pill Navigation Drawer Button -->
         <Style Selector="RadioButton.navBtn">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="CornerRadius" Value="16" />
             <Setter Property="Padding" Value="14,10" />
-            <Setter Property="Margin" Value="0,2" />
+            <Setter Property="Margin" Value="0" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="HorizontalContentAlignment" Value="Left" />
             <Setter Property="Cursor" Value="Hand" />
@@ -49,13 +49,44 @@
             </Setter>
         </Style>
 
-        <Style Selector="RadioButton.navBtn:checked">
-            <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight2}" />
+        <Style Selector="RadioButton.navBtn:checked, RadioButton.navBtn:checked:pointerover">
+            <Setter Property="Background" Value="Transparent" />
             <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
 
         <Style Selector="RadioButton.navBtn:pointerover:not(:checked)">
-            <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight3}" />
+            <Setter Property="Background" Value="{DynamicResource PillHoverBrush}" />
+        </Style>
+
+        <!-- LG UX 10 Pill Button -->
+        <Style Selector="Button.pillBtn">
+            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="Padding" Value="14,7" />
+            <Setter Property="Background" Value="{DynamicResource PillBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource PillBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+
+        <!-- LG UX 10 Circle Icon Button -->
+        <Style Selector="Button.circleBtn">
+            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="Width" Value="34" />
+            <Setter Property="Height" Value="34" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Background" Value="{DynamicResource PillBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource PillBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+
+        <!-- LG UX 10 Badge Pill -->
+        <Style Selector="Border.badgePill">
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Padding" Value="8,3" />
+            <Setter Property="Background" Value="{DynamicResource AccentBadgeBrush}" />
         </Style>
     </Application.Styles>
 
@@ -63,22 +94,54 @@
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
-                    <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#F3F4F6" />
+                    <Color x:Key="SystemAccentColor">#007AFF</Color>
+                    <Color x:Key="SystemAccentColorLight1">#2B88FF</Color>
+                    <Color x:Key="SystemAccentColorLight2">#EBF3FF</Color>
+                    <Color x:Key="SystemAccentColorLight3">#D9E8FF</Color>
+                    <Color x:Key="SystemAccentColorDark1">#0066E0</Color>
+                    <Color x:Key="SystemAccentColorDark2">#0052B3</Color>
+                    <Color x:Key="SystemAccentColorDark3">#003D80</Color>
+
+                    <SolidColorBrush x:Key="AppAccentBrush" Color="#007AFF" />
+                    <SolidColorBrush x:Key="SystemAccentBrush" Color="#007AFF" />
+                    <SolidColorBrush x:Key="SystemAccentColorBrush" Color="#007AFF" />
+                    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#F3F4F8" />
+                    <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#EBEDF3" />
                     <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFF" />
-                    <SolidColorBrush x:Key="CardBorderBrush" Color="#E5E7EB" />
-                    <SolidColorBrush x:Key="HeaderPrimaryBrush" Color="#1F2937" />
-                    <SolidColorBrush x:Key="SubTextBrush" Color="#6B7280" />
-                    <SolidColorBrush x:Key="AccentBadgeBrush" Color="#EEF2FF" />
-                    <SolidColorBrush x:Key="AccentBadgeTextBrush" Color="#4F46E5" />
+                    <SolidColorBrush x:Key="CardBorderBrush" Color="#E2E5EB" />
+                    <SolidColorBrush x:Key="HeaderPrimaryBrush" Color="#1A1B20" />
+                    <SolidColorBrush x:Key="SubTextBrush" Color="#767B8A" />
+                    <SolidColorBrush x:Key="AccentBadgeBrush" Color="#EBF3FF" />
+                    <SolidColorBrush x:Key="AccentBadgeTextBrush" Color="#0066E0" />
+                    <SolidColorBrush x:Key="PillBackgroundBrush" Color="#FFFFFF" />
+                    <SolidColorBrush x:Key="PillBorderBrush" Color="#DFE3EA" />
+                    <SolidColorBrush x:Key="PillHoverBrush" Color="#F0F4FA" />
+                    <SolidColorBrush x:Key="IconContainerBrush" Color="#E2E5EC" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
-                    <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#18181B" />
-                    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#27272A" />
-                    <SolidColorBrush x:Key="CardBorderBrush" Color="#3F3F46" />
-                    <SolidColorBrush x:Key="HeaderPrimaryBrush" Color="#F9FAFB" />
-                    <SolidColorBrush x:Key="SubTextBrush" Color="#9CA3AF" />
-                    <SolidColorBrush x:Key="AccentBadgeBrush" Color="#312E81" />
-                    <SolidColorBrush x:Key="AccentBadgeTextBrush" Color="#A5B4FC" />
+                    <Color x:Key="SystemAccentColor">#2C8CFF</Color>
+                    <Color x:Key="SystemAccentColorLight1">#5AA5FF</Color>
+                    <Color x:Key="SystemAccentColorLight2">#16283E</Color>
+                    <Color x:Key="SystemAccentColorLight3">#1E3554</Color>
+                    <Color x:Key="SystemAccentColorDark1">#0066E0</Color>
+                    <Color x:Key="SystemAccentColorDark2">#0052B3</Color>
+                    <Color x:Key="SystemAccentColorDark3">#003D80</Color>
+
+                    <SolidColorBrush x:Key="AppAccentBrush" Color="#2C8CFF" />
+                    <SolidColorBrush x:Key="SystemAccentBrush" Color="#2C8CFF" />
+                    <SolidColorBrush x:Key="SystemAccentColorBrush" Color="#2C8CFF" />
+                    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#0D0D10" />
+                    <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#15151A" />
+                    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#1F1F26" />
+                    <SolidColorBrush x:Key="CardBorderBrush" Color="#2C2C36" />
+                    <SolidColorBrush x:Key="HeaderPrimaryBrush" Color="#F6F7FA" />
+                    <SolidColorBrush x:Key="SubTextBrush" Color="#9499A8" />
+                    <SolidColorBrush x:Key="AccentBadgeBrush" Color="#16283E" />
+                    <SolidColorBrush x:Key="AccentBadgeTextBrush" Color="#62A7FF" />
+                    <SolidColorBrush x:Key="PillBackgroundBrush" Color="#1F1F26" />
+                    <SolidColorBrush x:Key="PillBorderBrush" Color="#2C2C36" />
+                    <SolidColorBrush x:Key="PillHoverBrush" Color="#282832" />
+                    <SolidColorBrush x:Key="IconContainerBrush" Color="#2A2A34" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>

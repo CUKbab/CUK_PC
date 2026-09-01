@@ -32,7 +32,7 @@ public partial class CafeBonaViewModel : ViewModelBase
             MealGroups.Add(new MealGroupItem
             {
                 GroupTitle = _loc.Get("screen_cafe_bona"),
-                OperatingHours = showOperatingHours ? $"({_loc.Get("operating_cafe_bona")})" : string.Empty,
+                OperatingHours = showOperatingHours ? _loc.Get("operating_cafe_bona") : string.Empty,
                 Items = items
             });
         }

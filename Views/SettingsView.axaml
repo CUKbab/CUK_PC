@@ -102,10 +102,10 @@
                         </StackPanel>
                         <Button Grid.Column="1"
                                 Command="{Binding OpenChangelogCommand}"
-                                Classes="accent">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
-                                <materialIcons:MaterialIcon Kind="NewReleases" Width="18" Height="18" />
-                                <TextBlock Text="{Binding Loc[whats_new]}" VerticalAlignment="Center" />
+                                Classes="pillBtn">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <materialIcons:MaterialIcon Kind="NewReleases" Width="16" Height="16" Foreground="{DynamicResource AppAccentBrush}" />
+                                <TextBlock Text="{Binding Loc[whats_new]}" FontWeight="SemiBold" VerticalAlignment="Center" />
                             </StackPanel>
                         </Button>
                     </Grid>
@@ -124,56 +124,23 @@
                     <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
                         <StackPanel Spacing="4">
                             <TextBlock Text="{Binding Loc[report_menu_error]}" FontWeight="SemiBold" />
-                            <TextBlock Text="Report an inaccurate or missing cafeteria menu."
+                            <TextBlock Text="{Binding Loc[report_menu_error]}"
                                        FontSize="12"
                                        Foreground="{DynamicResource SubTextBrush}" />
                         </StackPanel>
                         <Button Grid.Column="1"
-                                Command="{Binding OpenReportDialogCommand}"
-                                CommandParameter="menu-error">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
-                                <materialIcons:MaterialIcon Kind="SilverwareForkKnife" Width="16" Height="16" />
-                                <TextBlock Text="{Binding Loc[report_menu_error]}" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </Button>
-                    </Grid>
-                </Border>
-
-                <!-- Suggest Feature -->
-                <Border Classes="menuCard">
-                    <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
-                        <StackPanel Spacing="4">
-                            <TextBlock Text="{Binding Loc[suggest_feature]}" FontWeight="SemiBold" />
-                            <TextBlock Text="Propose new features or improvements."
-                                       FontSize="12"
-                                       Foreground="{DynamicResource SubTextBrush}" />
-                        </StackPanel>
-                        <Button Grid.Column="1"
-                                Command="{Binding OpenReportDialogCommand}"
-                                CommandParameter="feature">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
-                                <materialIcons:MaterialIcon Kind="LightbulbOutline" Width="16" Height="16" />
-                                <TextBlock Text="{Binding Loc[suggest_feature]}" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </Button>
-                    </Grid>
-                </Border>
-
-                <!-- Report Bug -->
-                <Border Classes="menuCard">
-                    <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
-                        <StackPanel Spacing="4">
-                            <TextBlock Text="{Binding Loc[report_bug]}" FontWeight="SemiBold" />
-                            <TextBlock Text="Report an application bug or unexpected behavior."
-                                       FontSize="12"
-                                       Foreground="{DynamicResource SubTextBrush}" />
-                        </StackPanel>
-                        <Button Grid.Column="1"
-                                Command="{Binding OpenReportDialogCommand}"
-                                CommandParameter="bug">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
-                                <materialIcons:MaterialIcon Kind="BugOutline" Width="16" Height="16" />
-                                <TextBlock Text="{Binding Loc[report_bug]}" VerticalAlignment="Center" />
+                                Command="{Binding ReportMenuErrorCommand}"
+                                Classes="pillBtn"
+                                IsEnabled="{Binding !IsReporting}">
+                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                <ProgressBar IsIndeterminate="True"
+                                             Width="16" Height="16"
+                                             IsVisible="{Binding IsReporting}" />
+                                <materialIcons:MaterialIcon Kind="SilverwareForkKnife"
+                                                            Width="16" Height="16"
+                                                            Foreground="{DynamicResource AppAccentBrush}"
+                                                            IsVisible="{Binding !IsReporting}" />
+                                <TextBlock Text="{Binding Loc[report_menu_error]}" FontWeight="SemiBold" VerticalAlignment="Center" />
                             </StackPanel>
                         </Button>
                     </Grid>
@@ -190,7 +157,13 @@
                 <Border Classes="menuCard">
                     <StackPanel Spacing="12">
                         <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
-                            <Image Source="/Assets/cuk_logo.png" Width="40" Height="40" />
+                            <Border CornerRadius="12" Width="40" Height="40"
+                                    Background="{DynamicResource CardBackgroundBrush}"
+                                    BorderBrush="{DynamicResource CardBorderBrush}"
+                                    BorderThickness="1"
+                                    ClipToBounds="True">
+                                <Image Source="/Assets/cuk_logo.png" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
                             <StackPanel Spacing="2">
                                 <TextBlock Text="CUK밥 PC" FontSize="16" FontWeight="Bold" />
                                 <TextBlock Text="Version 1.0.0" FontSize="12" Foreground="{DynamicResource SubTextBrush}" />
@@ -201,10 +174,12 @@
                                    FontSize="13"
                                    Foreground="{DynamicResource SubTextBrush}" />
 
-                        <Button Command="{Binding OpenGitHubCommand}" HorizontalAlignment="Left">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
-                                <materialIcons:MaterialIcon Kind="Github" Width="18" Height="18" />
-                                <TextBlock Text="{Binding Loc[github_source]}" VerticalAlignment="Center" />
+                        <Button Command="{Binding OpenGitHubCommand}"
+                                Classes="pillBtn"
+                                HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <materialIcons:MaterialIcon Kind="Github" Width="18" Height="18" Foreground="{DynamicResource AppAccentBrush}" />
+                                <TextBlock Text="{Binding Loc[github_source]}" FontWeight="SemiBold" VerticalAlignment="Center" />
                             </StackPanel>
                         </Button>
                     </StackPanel>

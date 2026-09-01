@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using Avalonia;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CUK.Models;
@@ -22,6 +23,9 @@ public partial class MainViewModel : ViewModelBase
 
     [ObservableProperty]
     private int _selectedScreenIndex = 0; // 0 = BuonPranzo, 1 = CafeBona, 2 = Settings
+
+    [ObservableProperty]
+    private Thickness _navIndicatorMargin = new(0, 0, 0, 0);
 
     [ObservableProperty]
     private ViewModelBase _currentView;
@@ -53,7 +57,16 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     private bool _canGoNextDay = true;
 
+    [ObservableProperty]
+    private bool _isSidebarOpen = true;
+
     private MenuData? _menuData;
+
+    [RelayCommand]
+    public void ToggleSidebar()
+    {
+        IsSidebarOpen = !IsSidebarOpen;
+    }
 
     public MainViewModel()
     {
@@ -97,6 +110,7 @@ public partial class MainViewModel : ViewModelBase
 
     partial void OnSelectedScreenIndexChanged(int value)
     {
+        NavIndicatorMargin = new Thickness(0, value * 52, 0, 0);
         CurrentView = value switch
         {
             0 => BuonPranzoVm,
