@@ -25,19 +25,19 @@ jobs:
           - os: Linux
             rid: linux-x64
             runner: ubuntu-latest
-            artifact: CUK-linux-x64.tar.gz
+            artifact: CUK밥-linux-x64.tar.gz
           - os: Windows
             rid: win-x64
             runner: windows-latest
-            artifact: CUK-windows-x64.zip
+            artifact: CUK밥-windows-x64.zip
           - os: macOS-Intel
             rid: osx-x64
             runner: macos-latest
-            artifact: CUK-macos-x64.dmg
+            artifact: CUK밥-macos-x64.dmg
           - os: macOS-AppleSilicon
             rid: osx-arm64
             runner: macos-latest
-            artifact: CUK-macos-arm64.dmg
+            artifact: CUK밥-macos-arm64.dmg
 
     steps:
       - name: Checkout repository
@@ -55,7 +55,8 @@ jobs:
           dotnet publish CUK.csproj -c Release -r linux-x64 --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./publish/linux
           cp CUK.desktop ./publish/linux/ 2>/dev/null || true
           cp Assets/cuk_logo.png ./publish/linux/ 2>/dev/null || true
-          tar -czvf ${{ matrix.target.artifact }} -C ./publish/linux .
+          cd ./publish/linux
+          tar -czvf ../../${{ matrix.target.artifact }} *
 
       # Windows Build & Package (.zip)
       - name: Build Windows
@@ -101,16 +102,14 @@ jobs:
           </plist>
           EOF
           
-          # Create DMG
-          hdiutil create -volname "CUK밥" -srcfolder ./publish/CUK.app -ov -format UDZO ${{ matrix.target.artifact }}
+          hdiutil create -volname "CUK밥" -srcfolder ./publish/CUK.app -ov -format UDZO "${{ matrix.target.artifact }}"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.target.artifact }}
           path: ${{ matrix.target.artifact }}
-
-  release:
+release:
     name: Publish GitHub Release
     needs: build
     runs-on: ubuntu-latest
@@ -129,17 +128,17 @@ jobs:
           else
             echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
           fi
-
-      # Download the markdown file from the other repository
-      - name: Download Changelog
-        run: curl -sL "https://raw.githubusercontent.com/CUKbab/CUK/refs/heads/main/pc_changelogs/en.md" -o changelog.md
+      - name: Download and Format Changelog
+        run: |
+          curl -sL "https://raw.githubusercontent.com/CUKbab/CUK/refs/heads/main/pc_changelogs/en.md" -o changelog.md
+          
+          sed -i '/^# CUK밥 PC/d' changelog.md
 
       - name: Create GitHub Release & Upload Files
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.vars.outputs.tag }}
           name: Release ${{ steps.vars.outputs.tag }}
-          # Point the release body to the downloaded file
           body_path: changelog.md
-          generate_release_notes: true
+          generate_release_notes: false
           files: ./artifacts/*
