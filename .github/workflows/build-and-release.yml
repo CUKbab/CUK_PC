@@ -1,9 +1,6 @@
 name: Build and Release CUK PC
 
 on:
-  push:
-    tags:
-      - 'v*'
   workflow_dispatch:
     inputs:
       tag_name:
@@ -109,7 +106,7 @@ jobs:
         with:
           name: ${{ matrix.target.artifact }}
           path: ${{ matrix.target.artifact }}
-release:
+  release:
     name: Publish GitHub Release
     needs: build
     runs-on: ubuntu-latest
