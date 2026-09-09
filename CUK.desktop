@@ -1,9 +1,9 @@
 [Desktop Entry]
 Name=CUK밥
 Comment=Catholic University of Korea Cafeteria Menu
-Exec=CUK
+Exec=CUK밥
 Icon=cuk_logo
 Terminal=false
 Type=Application
 Categories=Utility;Education;
-StartupWMClass=CUK
+StartupWMClass=CUK밥

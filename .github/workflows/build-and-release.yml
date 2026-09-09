@@ -22,19 +22,19 @@ jobs:
           - os: Linux
             rid: linux-x64
             runner: ubuntu-latest
-            artifact: CUK밥-linux-x64.tar.gz
+            artifact: CUKbab-linux-x64.tar.gz
           - os: Windows
             rid: win-x64
             runner: windows-latest
-            artifact: CUK밥-windows-x64.zip
+            artifact: CUKbab-windows-x64.zip
           - os: macOS-Intel
             rid: osx-x64
             runner: macos-latest
-            artifact: CUK밥-macos-x64.dmg
+            artifact: CUKbab-macos-x64.dmg
           - os: macOS-AppleSilicon
             rid: osx-arm64
             runner: macos-latest
-            artifact: CUK밥-macos-arm64.dmg
+            artifact: CUKbab-macos-arm64.dmg
 
     steps:
       - name: Checkout repository
@@ -69,12 +69,12 @@ jobs:
         run: |
           dotnet publish CUK.csproj -c Release -r ${{ matrix.target.rid }} --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./publish/bin
           
-          mkdir -p ./publish/CUK.app/Contents/MacOS
-          mkdir -p ./publish/CUK.app/Contents/Resources
-          mv ./publish/bin/CUK ./publish/CUK.app/Contents/MacOS/CUK
-          chmod +x ./publish/CUK.app/Contents/MacOS/CUK
+          mkdir -p ./publish/CUK밥.app/Contents/MacOS
+          mkdir -p ./publish/CUK밥.app/Contents/Resources
+          mv ./publish/bin/CUK밥 ./publish/CUK밥.app/Contents/MacOS/CUK밥
+          chmod +x ./publish/CUK밥.app/Contents/MacOS/CUK밥
           
-          cat <<EOF > ./publish/CUK.app/Contents/Info.plist
+          cat <<EOF > ./publish/CUK밥.app/Contents/Info.plist
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
@@ -92,14 +92,14 @@ jobs:
               <key>CFBundlePackageType</key>
               <string>APPL</string>
               <key>CFBundleExecutable</key>
-              <string>CUK</string>
+              <string>CUK밥</string>
               <key>NSHighResolutionCapable</key>
               <true/>
           </dict>
           </plist>
           EOF
           
-          hdiutil create -volname "CUK밥" -srcfolder ./publish/CUK.app -ov -format UDZO "${{ matrix.target.artifact }}"
+          hdiutil create -volname "CUK밥" -srcfolder ./publish/CUK밥.app -ov -format UDZO "${{ matrix.target.artifact }}"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
