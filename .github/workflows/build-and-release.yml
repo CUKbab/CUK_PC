@@ -67,14 +67,28 @@ jobs:
       - name: Build macOS
         if: startsWith(matrix.target.os, 'macOS')
         run: |
+          set -euo pipefail
+
+          VERSION="${{ github.event.inputs.tag_name }}"
+          VERSION="${VERSION#v}"
+
           dotnet publish CUK.csproj -c Release -r ${{ matrix.target.rid }} --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./publish/bin
-          
-          mkdir -p ./publish/CUK밥.app/Contents/MacOS
-          mkdir -p ./publish/CUK밥.app/Contents/Resources
-          mv ./publish/bin/CUK밥 ./publish/CUK밥.app/Contents/MacOS/CUK밥
-          chmod +x ./publish/CUK밥.app/Contents/MacOS/CUK밥
-          
-          cat <<EOF > ./publish/CUK밥.app/Contents/Info.plist
+
+          APP="./publish/CUK밥.app"
+          mkdir -p "$APP/Contents/MacOS"
+          mkdir -p "$APP/Contents/Resources"
+
+          # The executable inside the bundle MUST have an ASCII name.
+          # codesign fails to recognise a non-ASCII CFBundleExecutable as the bundle's
+          # main binary and seals it as a nested resource instead, producing a signature
+          # that can never validate ("code has no resources but signature indicates they
+          # must be present"), which Gatekeeper reports to users as "app is damaged".
+          # The user-visible name comes from CFBundleName / the .app folder, so the app
+          # is still shown as CUK밥 in Finder and the Dock.
+          mv ./publish/bin/CUK밥 "$APP/Contents/MacOS/CUKbab"
+          chmod +x "$APP/Contents/MacOS/CUKbab"
+
+          cat <<EOF > "$APP/Contents/Info.plist"
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
@@ -86,20 +100,29 @@ jobs:
               <key>CFBundleIdentifier</key>
               <string>com.cukbab.cukpc</string>
               <key>CFBundleVersion</key>
-              <string>1.0.0</string>
+              <string>$VERSION</string>
               <key>CFBundleShortVersionString</key>
-              <string>1.0.0</string>
+              <string>$VERSION</string>
               <key>CFBundlePackageType</key>
               <string>APPL</string>
               <key>CFBundleExecutable</key>
-              <string>CUK밥</string>
+              <string>CUKbab</string>
+              <key>LSMinimumSystemVersion</key>
+              <string>12.0</string>
               <key>NSHighResolutionCapable</key>
               <true/>
           </dict>
           </plist>
           EOF
-          
-          hdiutil create -volname "CUK밥" -srcfolder ./publish/CUK밥.app -ov -format UDZO "${{ matrix.target.artifact }}"
+
+          # Sign the bundle only after it is fully assembled. dotnet publish ad-hoc signs
+          # the bare executable, so a bundle built around it afterwards carries a signature
+          # with no _CodeSignature and an unbound Info.plist. --deep is not needed: there
+          # are no nested bundles.
+          codesign --force --sign - --identifier com.cukbab.cukpc "$APP"
+          codesign --verify --strict --verbose=2 "$APP"
+
+          hdiutil create -volname "CUK밥" -srcfolder "$APP" -ov -format UDZO "${{ matrix.target.artifact }}"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
