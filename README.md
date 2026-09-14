@@ -22,6 +22,21 @@ Targets:
 
 ---
 
+## Installing on macOS
+
+The released `.dmg` builds are ad-hoc signed, not notarized with an Apple Developer ID.
+macOS therefore refuses to launch them directly after download. Drag `CUK밥.app` into
+`/Applications`, then clear the quarantine flag once:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/CUK밥.app
+```
+
+Alternatively, open it once via `System Settings -> Privacy & Security -> Open Anyway`.
+The right-click -> Open bypass no longer works on macOS 15 and later.
+
+---
+
 ## Development & Running
 
 ### Requirements
